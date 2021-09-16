@@ -6,7 +6,18 @@ html, body {
 	/* background-image: url("./img/space_image3.jpg"); */
 	background-image: url("https://www.spacetagram.io/static/img/space_image3.jpg");
 	background-repeat: repeat-y;
-	margin-top: 60px}
+	margin-top: 60px;
+	background-attachment: fixed;
+  	background-position: center;
+  	background-repeat: no-repeat;
+  	background-size: cover;
+}
+
+@media only screen and (max-device-width: 1366px) {
+	html, body {
+	  background-attachment: scroll;
+	}
+  }
 
 body {
 	color: #333;
