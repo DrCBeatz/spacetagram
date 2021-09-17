@@ -1,6 +1,7 @@
 <script>
 	import Card from './Card.svelte';
-	import Badge from './Badge.svelte';
+	// import Badge from './Badge.svelte';
+	import Error from './Error.svelte';
 	import Button from './Button.svelte';
 	import Header from './Header.svelte';
 	import LoadingSpinner from './LoadingSpinner.svelte';
@@ -11,23 +12,29 @@
 
 	const RANDOM_IMAGES = "Random Images";
 	const IMAGE_DATE_RANGE = "Image Date Range";
+	// const today = new Date().setHours(0,0,0,0);
 	const DATE_TODAY = new Date().toISOString().split("T")[0];
 	const DATE_YESTERDAY = new Date(new Date().setDate(new Date().getDate()-1)).toISOString().split("T")[0];
-	// const DAY_BEFORE_TODAY = addDays(DATE_TODAY, 1);
 
 	let mode = RANDOM_IMAGES;
 	let search = '';
 	let imageList = [];
 	let likedImages = $store;
-	// let likedImages = store.get();
 	let isLoading = false;
-	let imageStartDate = DATE_YESTERDAY; // addDays(DATE_TODAY, -1);
+	let error;
+	let imageStartDate = DATE_YESTERDAY;
 	let imageEndDate = DATE_TODAY;
 	let count = 2;
 
 	
 
 	function loadImages() {
+		
+		if (!isValidSearch() ) {
+			return;
+		}
+
+		isLoading = true;
 		let request = '';
 		if ( mode == RANDOM_IMAGES ) {
 			request = `https://api.nasa.gov/planetary/apod?api_key=dAt0hYR1btozyhNwVCih2alU4bwYFljIrmWtQ4JW&count=${count}`;
@@ -37,43 +44,68 @@
 
 		fetch(request)
 	  .then(res => {
-		  isLoading = true;
 		if (!res.ok) {
+			isLoading = false;
 		  throw new Error("Fetching images failed, please try again later!");
 		}
-		return res.json();
+			return res.json();
 	  })
 	  .then(
 		  data => {
 			imageList = data.reverse();
 			setTimeout(() => {
 		  isLoading = false;
-		//   meetups.setMeetups(loadedMeetups.reverse());
 		}, 500);
-								}	
+		}	
 	  )
 	  .catch(err => {
 		error = err;
+		error.message = "Fetching images failed, please try again later!";
+		isLoading = false;
 		console.log(err);
 	  });
 	}
 
+	function isValidSearch () {
+		if (mode == RANDOM_IMAGES && count > 10) {
+		  error = {message: "Cannot load more than 10 random images!"};
+		  return false;
+		} else if (mode == RANDOM_IMAGES && count < 1 ) {
+			error = {message: "Must load at least 1 random image, i.e. a number greater than 0!"};
+		  	return false;
+		} else if (mode == RANDOM_IMAGES && !Number.isInteger(count)) {
+			error = {message: "Please enter an integer (no decimals)!"};
+		  	return false;
+		}
+		if ( mode == IMAGE_DATE_RANGE && imageEndDate > DATE_TODAY) {
+			error = {message: "End date must not be greater than today!"};
+		  	return false;
+		} 
+		else if ( mode == IMAGE_DATE_RANGE && imageStartDate > DATE_TODAY ) {
+			error = {message: "Start date must not be greater than today!"};
+		  	return false;
+		}
+		else if ( mode == IMAGE_DATE_RANGE && imageStartDate > imageEndDate) {
+			error = {message: "Start date must not be greater than end date!"}
+			return false;
+		} 
+		if ( mode == IMAGE_DATE_RANGE && daysBetween(imageStartDate, imageEndDate) > 10) {
+			error = {message: "Cannot load more than 10 days of images!"}
+			return false;
+		}
+		return true;
+	}
+
 	function likeImage(image) {
-		console.log(image);
 		likedImages = [...likedImages, image]
 		store.update((prev) => [...prev, image])
-		console.log(store);
 	}
 
 	function removeLikedImage(image) {
 		likedImages = likedImages.filter( obj => {
-			// document.getElementById(image.date).disabled = false;
     		return obj.date !== image.date;
 		});
-		console.log(likedImages);
-		// store[0].update((images) => images.filter((item) => item.date !== image.date))
 		store.update((prev) => [...likedImages])
-		console.log(store);
 	}
 
 	function toggleLikedImageHandler(image) {
@@ -85,12 +117,6 @@
 				likeImage(image);			
 		}
 	}
-
-	// $: if (likedImages.length >= 5) {
-	// 	maxNominees = true;
-	// } else {
-	// 	maxNominees = false;
-	// }
 
 	function SendLinkByMail(image) {
 				const linebreak = '\r\n\r\n'
@@ -106,7 +132,6 @@
                 uri += encodeURIComponent(image.title + ` (${image.media_type} from NASA)`);
                 uri += "&body=";
                 uri += encodeURIComponent(body);
-                // window.open(uri);
 				window.location.href = uri 
             }
 
@@ -130,9 +155,22 @@
     			);
 			}
 
-			// const datePicker = getElementById('#datePickerId');
+			function clearError() {
+	 			 error = null;
+			}
 
-			// datePicker.max = new Date().toISOString().split("T")[0];
+			function treatAsUTC(date) {
+    			var result = new Date(date);
+    			result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+    			return result;
+			}
+
+			function daysBetween(startDate, endDate) {
+    			var millisecondsPerDay = 24 * 60 * 60 * 1000;
+    			return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+			}
+
+
 			loadImages();
 </script>
 
@@ -226,7 +264,7 @@ input[type='number']{
 
 h1 { 
 	font-family: "Roboto Slab", serif;
-	color:white;
+	color:white;	
 }
 
 
@@ -259,10 +297,9 @@ h3 {
   position: relative;
   overflow: hidden;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
+  padding-top: 56.25%; 
 }
 
-/* Then style the iframe to fit in the container div with full height and width */
 .responsive-iframe {
   position: absolute;
   top: 0;
@@ -290,6 +327,10 @@ main {
 
 </style>
 
+{#if error}
+	<Error message={error.message} on:cancel={clearError} />
+{/if}
+
 <Header>
 	<div slot="search">
 		<Button mode="outline" on:click={loadImages}>Load Images</Button>
@@ -302,9 +343,12 @@ main {
 	<LoadingSpinner />
 {:else}
 
-	{#if imageList.length > 0 }
-		<section transition:fade>
+<section transition:fade>
+			{#if imageList.length > 0 }
 		<h1 class="center-text">NASA's Astronomy Picture of the Day</h1>
+	{:else}
+	<h1 class="center-text">No images found, try again with a different start and end date.</h1>	
+	{/if}
 		<h5 class="center-text" style="color:white">(choose search options below and click 'Load Images' above for more images)</h5>
 		<h3 class="center-text" style="color:white">Toggle Search Mode:</h3>
 		<Button mode="center-button" on:click={toggleModeHandler}>{mode}</Button>
@@ -370,11 +414,13 @@ main {
 	</div>
 	</Card>
 	{/each}
-	<!-- {:else} -->
+	<!-- {:else}
+	<h1 class="center-text">No images found, try again!</h1> -->
+
 	<!-- <h1 class="center-text">Welcome to Spacetagram!</h1> -->
 	<!-- <h3 class="center-text">Images from NASA's Astronomy Picture of the Day</h3> -->
 		<!-- <h5 class="center-text">Enter the number of images to load (above) and click "Load Images".</h5> -->
-	{/if}
+	<!-- {/if} -->
 	
 
 
