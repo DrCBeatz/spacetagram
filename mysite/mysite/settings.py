@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['www.spacetagram.io']
 
 
 # Application definition
@@ -44,12 +44,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django_permissions_policy.PermissionsPolicyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -127,3 +129,102 @@ STATIC_ROOT = '/home/spacetagram/spacetagram/static'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PERMISSIONS_POLICY = {
+    "accelerometer": [],
+    "ambient-light-sensor": [],
+    # "autoplay": [],
+    # "camera": [],
+    "display-capture": [],
+    "document-domain": [],
+    "encrypted-media": [],
+    # "fullscreen": [],
+    "geolocation": [],
+    "gyroscope": [],
+    "interest-cohort": [],
+    "magnetometer": [],
+    "microphone": [],
+    "midi": [],
+    "payment": [],
+    "usb": [],
+}
+
+
+# django-csp headers:
+
+CSP_STYLE_SRC = (
+    "'self'",
+    "fonts.googleapis.com",
+    "'unsafe-inline'",
+    # "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='",
+    )
+
+CSP_SCRIPT_SRC = ("'self'",
+    "www.google-analytics.com",
+    "ssl.google-analytics.com",
+    "www.googletagservices.com",
+    "https://player.vimeo.com/api/",
+     )
+
+CSP_IMG_SRC = ("'self'",
+    "www.google-analytics.com",
+    'api.nasa.gov',
+    'apod.nasa.gov',
+    'i.ytimg.com',
+    'ytimg.com',
+    "raw.githubusercontent.com",
+    "googleads.g.doubleclick.net",
+    # "www.gravatar.com",
+    "maps.gstatic.com",
+    "*.googleapis.com",
+    "*.ggpht",
+    "data:",
+    "blob:",
+    )
+
+CSP_FONT_SRC = ("'self'",
+    "fonts.gstatic.com",
+    "data:",
+    )
+
+CSP_CONNECT_SRC = ("'self'",
+    "www.google-analytics.com",
+    'api.nasa.gov',
+    )
+
+CSP_OBJECT_SRC = ("'none'", )
+CSP_BASE_URI = ("'self'", )
+CSP_FRAME_SRC = ("www.youtube.com/embed/",
+    "www.youtube.com/",
+    "youtube.com",
+    "player.vimeo.com/video/",
+    )
+
+CSP_FRAME_ANCESTORS = ("'self'",
+    "https://www.youtube.com/embed/",
+    "https://www.youtube.com/"
+    )
+
+CSP_FORM_ACTION = (
+    "'self'",
+    )
+
+CSP_INCLUDE_NONCE_IN = ('script-src', 'style-src' )
+CSP_MANIFEST_SRC = ("'self'", )
+CSP_WORKER_SRC = ("'self'", )
+CSP_MEDIA_SRC = ("'self'", )
+CSP_DEFAULT_SRC = ("'none'",)
+
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+SECURE_HSTS_SECONDS = 15768000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"

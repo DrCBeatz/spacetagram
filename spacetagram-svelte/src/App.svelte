@@ -1,4 +1,8 @@
 <script>
+	import {store} from './stores/store'
+
+	import { fade, fly } from 'svelte/transition';
+
 	import Card from './Card.svelte';
 	// import Badge from './Badge.svelte';
 	import Error from './Error.svelte';
@@ -6,17 +10,13 @@
 	import Header from './Header.svelte';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 
-	import {store} from './stores/store'
-
-	import { fade, fly } from 'svelte/transition';
 
 	const RANDOM_IMAGES = "Random Images";
 	const IMAGE_DATE_RANGE = "Image Date Range";
-	// const today = new Date().setHours(0,0,0,0);
 	const DATE_TODAY = new Date().toISOString().split("T")[0];
 	const DATE_YESTERDAY = new Date(new Date().setDate(new Date().getDate()-1)).toISOString().split("T")[0];
 
-	let mode = RANDOM_IMAGES;
+	let mode = IMAGE_DATE_RANGE;
 	let search = '';
 	let imageList = [];
 	let likedImages = $store;
@@ -345,7 +345,7 @@ main {
 
 <section transition:fade>
 			{#if imageList.length > 0 }
-		<h1 class="center-text">NASA's Astronomy Picture of the Day</h1>
+		<h1 class="center-text">NASA's Astronomy Picture of the Day.</h1>
 	{:else}
 	<h1 class="center-text">No images found, try again with a different start and end date.</h1>	
 	{/if}
@@ -386,7 +386,7 @@ main {
 		</a>
 		{:else if image.media_type = 'video'}
 		<div class="container">
-		<iframe class="responsive-iframe" width="420" height="315" src={image.url}></iframe>
+		<iframe class="responsive-iframe" width="420" height="315" allow="fullscreen;" allowfullscreen src={image.url}></iframe>
 		</div>
 		{:else}
 		<a href={image.url}>{image.url}</a>
