@@ -1,23 +1,24 @@
 <script>
 	import {store} from './stores/store'
 
+	import Card from './components/ui/Card.svelte';
+	import Error from './components/ui/Error.svelte';
+	import Button from './components/ui/Button.svelte';
+	import Header from './components/ui/Header.svelte';
+	import LoadingSpinner from './components/ui/LoadingSpinner.svelte';
+	
+	import ImageLoader from './components/image/ImageLoader.svelte';
+	
 	import { fade, fly } from 'svelte/transition';
-
-	import Card from './Card.svelte';
-	// import Badge from './Badge.svelte';
-	import Error from './Error.svelte';
-	import Button from './Button.svelte';
-	import Header from './Header.svelte';
-	import LoadingSpinner from './LoadingSpinner.svelte';
-
-
+	
 	const RANDOM_IMAGES = "Random Images";
 	const IMAGE_DATE_RANGE = "Image Date Range";
 	const DATE_TODAY = new Date().toISOString().split("T")[0];
 	const DATE_YESTERDAY = new Date(new Date().setDate(new Date().getDate()-1)).toISOString().split("T")[0];
+	const API_KEY = 'your_key_here';
+	const MAX_IMAGES = 10;
 
-	let mode = IMAGE_DATE_RANGE;
-	let search = '';
+	let mode = RANDOM_IMAGES;
 	let imageList = [];
 	let likedImages = $store;
 	let isLoading = false;
@@ -26,7 +27,6 @@
 	let imageEndDate = DATE_TODAY;
 	let count = 2;
 
-	
 
 	function loadImages() {
 		
@@ -37,9 +37,9 @@
 		isLoading = true;
 		let request = '';
 		if ( mode == RANDOM_IMAGES ) {
-			request = `https://api.nasa.gov/planetary/apod?api_key=dAt0hYR1btozyhNwVCih2alU4bwYFljIrmWtQ4JW&count=${count}`;
+			request = `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&count=${count}`;
 		} else {
-			request = `https://api.nasa.gov/planetary/apod?api_key=dAt0hYR1btozyhNwVCih2alU4bwYFljIrmWtQ4JW&start_date=${imageStartDate}&end_date=${imageEndDate}`;
+			request = `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&start_date=${imageStartDate}&end_date=${imageEndDate}`;
 		}
 
 		fetch(request)
@@ -67,34 +67,34 @@
 	}
 
 	function isValidSearch () {
-		if (mode == RANDOM_IMAGES && count > 10) {
-		  error = {message: "Cannot load more than 10 random images!"};
-		  return false;
-		} else if (mode == RANDOM_IMAGES && count < 1 ) {
-			error = {message: "Must load at least 1 random image, i.e. a number greater than 0!"};
-		  	return false;
-		} else if (mode == RANDOM_IMAGES && !Number.isInteger(count)) {
-			error = {message: "Please enter an integer (no decimals)!"};
-		  	return false;
-		}
-		if ( mode == IMAGE_DATE_RANGE && imageEndDate > DATE_TODAY) {
-			error = {message: "End date must not be greater than today!"};
-		  	return false;
-		} 
-		else if ( mode == IMAGE_DATE_RANGE && imageStartDate > DATE_TODAY ) {
-			error = {message: "Start date must not be greater than today!"};
-		  	return false;
-		}
-		else if ( mode == IMAGE_DATE_RANGE && imageStartDate > imageEndDate) {
-			error = {message: "Start date must not be greater than end date!"}
-			return false;
-		} 
-		if ( mode == IMAGE_DATE_RANGE && daysBetween(imageStartDate, imageEndDate) > 10) {
-			error = {message: "Cannot load more than 10 days of images!"}
-			return false;
-		}
-		return true;
-	}
+    if (mode == RANDOM_IMAGES && count > MAX_IMAGES) {
+      error = {message: "Cannot load more than " + MAX_IMAGES + " random images!"};
+      return false;
+    } else if (mode == RANDOM_IMAGES && count < 1 ) {
+        error = {message: "Must load at least 1 random image, i.e. a number greater than 0!"};
+          return false;
+    } else if (mode == RANDOM_IMAGES && !Number.isInteger(count)) {
+        error = {message: "Please enter an integer (no decimals)!"};
+          return false;
+    }
+    if ( mode == IMAGE_DATE_RANGE && imageEndDate > DATE_TODAY) {
+        error = {message: "End date must not be greater than today!"};
+          return false;
+    } 
+    else if ( mode == IMAGE_DATE_RANGE && imageStartDate > DATE_TODAY ) {
+        error = {message: "Start date must not be greater than today!"};
+          return false;
+    }
+    else if ( mode == IMAGE_DATE_RANGE && imageStartDate > imageEndDate) {
+        error = {message: "Start date must not be greater than end date!"}
+        return false;
+    } 
+    if ( mode == IMAGE_DATE_RANGE && daysBetween(imageStartDate, imageEndDate) > MAX_IMAGES) {
+        error = {message: "Cannot load more than " + MAX_IMAGES + " days of images!"}
+        return false;
+    }
+    return true;
+}	
 
 	function likeImage(image) {
 		likedImages = [...likedImages, image]
@@ -178,88 +178,42 @@
 * {
   box-sizing: border-box;
 }
-	  #my-nominees {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 1rem;
-  }
 
-  .column {
-  float: left;
-  width: 50%;
-  padding: 0 10px;
+
+/* .column {
+	float: left;
+	width: 50%;
+	padding: 0 10px;
 }
 
 .row:after {
-  content: "";
-  display: table;
-  clear: both;
+	content: "";
+	display: table;
+	clear: both;
 }
 
 .row {margin: 0 -5px;}
 
 @media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-    display: block;
-    margin-bottom: 20px;
-  }
-}
-img { 
-display: block;
-  margin-left: auto;
-  margin-right: auto;
-  /* width: 50%; */
+	.column {
+		width: 100%;
+		display: block;
+		margin-bottom: 20px;
+	}
 }
 
 .responsive {
-  max-width: 100%;
-  height: auto;
-}
+	max-width: 100%;
+	height: auto;
+} */
 
 input[type='number']{
-    width: 80px;
+	width: 80px;
 } 
 
-.center-text {
-  text-align: center;
-}
-
 .center-button {
-    margin:0 auto;
+	margin:0 auto;
     display:block;
-}
-
-.heart-center {
-	margin: auto;
-    padding: 20px;
-}
-
-.form {
-  display: flex;
-  flex-direction: row;
-}
-.search-field {
-	background-color: #f6f6f6;
-  width: 100%;
-  padding: 10px 35px 10px 15px;
-  border: 3px black;
-  border-radius: 100px;
-  outline: 3px ;
-}
-
-.search-button {
-  background: transparent;
-  border: none;
-  outline: none;
-  margin-left: -33px;
-}
-
-.search-button img {
-  width: 20px;
-  height: 20px;
-  object-fit: cover;
 }
 
 h1 { 
@@ -267,35 +221,22 @@ h1 {
 	color:white;	
 }
 
-
 h3 { 
 	color: #808080;
 }
 
-.heart {
-  width:200px;
-  background:
-   radial-gradient(circle at 60% 65%, #cf0056 64%, transparent 65%) top left,
-   radial-gradient(circle at 40% 65%, #cf0056 64%, transparent 65%) top right,
-   linear-gradient(to bottom left, #cf0056 43%,transparent 43%) bottom left ,
-   linear-gradient(to bottom right,#cf0056 43%,transparent 43%) bottom right;
-  background-size:50% 50%;
-  background-repeat:no-repeat;
-  display:inline-block;
-}
-.heart::before {
-  content:"";
-  display:block;
-  padding-top:100%;
+.heart-container {
+  height: 20px;
 }
 
-.label {
-	color: black;
+.heart-icon {
+	margin-top: -10px;
+	height: 30px;
 }
 
 .container {
-  position: relative;
-  overflow: hidden;
+	position: relative;
+	overflow: hidden;
   width: 100%;
   padding-top: 56.25%; 
 }
@@ -333,7 +274,7 @@ main {
 
 <Header>
 	<div slot="search">
-		<Button mode="outline" on:click={loadImages}>Load Images</Button>
+		<Button mode="outline success" on:click={loadImages}>Load Images</Button>
 
 </div>
 	<div slot="title">Spacetagram</div>
@@ -341,11 +282,12 @@ main {
 
 {#if isLoading } 
 	<LoadingSpinner />
+	<!-- <h1 class="center-text">Loading... Please wait!</h1> -->
 {:else}
 
 <section transition:fade>
 			{#if imageList.length > 0 }
-		<h1 class="center-text">NASA's Astronomy Picture of the Day.</h1>
+		<h1 class="center-text">NASA's Astronomy Picture of the Day</h1>
 	{:else}
 	<h1 class="center-text">No images found, try again with a different start and end date.</h1>	
 	{/if}
@@ -382,46 +324,40 @@ main {
 		<h3 class="center-text">{image.title} - ({image.date})</h3> 
 		{#if image.media_type == 'image'}
 		<a href={image.hdurl} target="_blank" >
-		<img src={image.url} alt={image.title} class="responsive" max-height="500" max-width="1000"/>
+		<ImageLoader src={image.url} alt={image.title} />
 		</a>
 		{:else if image.media_type = 'video'}
 		<div class="container">
-		<iframe class="responsive-iframe" width="420" height="315" allow="fullscreen;" allowfullscreen src={image.url}></iframe>
+		<iframe title={image.title} class="responsive-iframe" width="420" height="315" allow="fullscreen;" allowfullscreen src={image.url}></iframe>
 		</div>
 		{:else}
 		<a href={image.url}>{image.url}</a>
 		{/if}
 		<br>
+		<div transition:fade>
 		{#if image.media_type == 'image'}
-		<Button mode="center-button outline success" on:click={SendLinkByMail(image)}>Email Image URL</Button>
+		<Button mode="outline success" on:click={SendLinkByMail(image)}>Email Image URL</Button>
 		{:else if image.media_type == 'video'}
-		<Button mode="center-button outline success" on:click={SendLinkByMail(image)}>Email Video URL</Button>
+		<Button mode="outline success" on:click={SendLinkByMail(image)}>Email Video URL</Button>
 		{:else}
-		<Button mode="center-button outline success" on:click={SendLinkByMail(image)}>Email URL</Button>
+		<Button mode="outline success" on:click={SendLinkByMail(image)}>Email URL</Button>
 		{/if}
 		<p>{image.explanation}</p>
 		<p>
-			<Button mode={(likedImages.filter(e => e.date === image.date).length > 0 ) ? "button outline" : "outline success"} on:click={toggleLikedImageHandler(image)} 
-				
-				id={image.date} 
+			<!-- <Button mode={(likedImages.filter(e => e.date === image.date).length > 0 ) ? "button outline" : "outline success"} on:click={toggleLikedImageHandler(image)}  -->
+				<!-- id={image.date} -->
+			<Button mode="outline success" on:click={toggleLikedImageHandler(image)} 	
+				 
 				>{(likedImages.filter(e => e.date === image.date).length > 0 ) ? 'Unlike' : ' Like '}</Button>
 				
 				<br>
+				<div class="heart-container">
 				{#if (likedImages.filter(e => e.date === image.date).length > 0 )}
-				<div in:fade out:fade class="heart" style="width:30px;display:inline-block"></div>
-			{/if}
-
+					<img class="heart-icon" transition:fade src="https://www.spacetagram.io/static/img/heart3.png" alt="Heart Icon" />
+					{/if}
+				</div>
+			</div>
 	</div>
 	</Card>
 	{/each}
-	<!-- {:else}
-	<h1 class="center-text">No images found, try again!</h1> -->
-
-	<!-- <h1 class="center-text">Welcome to Spacetagram!</h1> -->
-	<!-- <h3 class="center-text">Images from NASA's Astronomy Picture of the Day</h3> -->
-		<!-- <h5 class="center-text">Enter the number of images to load (above) and click "Load Images".</h5> -->
-	<!-- {/if} -->
-	
-
-
 {/if}

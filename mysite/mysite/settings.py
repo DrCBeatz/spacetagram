@@ -201,8 +201,10 @@ CSP_FRAME_SRC = ("www.youtube.com/embed/",
     )
 
 CSP_FRAME_ANCESTORS = ("'self'",
-    "https://www.youtube.com/embed/",
-    "https://www.youtube.com/"
+    "apod.nasa.gov/"
+    "www.youtube.com/embed/",
+    "www.youtube.com/",
+    "player.vimeo.com/video/",
     )
 
 CSP_FORM_ACTION = (
