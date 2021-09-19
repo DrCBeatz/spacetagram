@@ -155,8 +155,8 @@ PERMISSIONS_POLICY = {
 CSP_STYLE_SRC = (
     "'self'",
     "fonts.googleapis.com",
-    "'unsafe-inline'",
-    # "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='",
+    # "'unsafe-inline'",
+    # "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='"
     )
 
 CSP_SCRIPT_SRC = ("'self'",
@@ -174,7 +174,6 @@ CSP_IMG_SRC = ("'self'",
     'ytimg.com',
     "raw.githubusercontent.com",
     "googleads.g.doubleclick.net",
-    # "www.gravatar.com",
     "maps.gstatic.com",
     "*.googleapis.com",
     "*.ggpht",

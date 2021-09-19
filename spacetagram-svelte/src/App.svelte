@@ -15,7 +15,7 @@
 	const IMAGE_DATE_RANGE = "Image Date Range";
 	const DATE_TODAY = new Date().toISOString().split("T")[0];
 	const DATE_YESTERDAY = new Date(new Date().setDate(new Date().getDate()-1)).toISOString().split("T")[0];
-	const API_KEY = 'your_key_here';
+	const API_KEY = 'trZh3Fl0yF3FbMh8fXkl8tlfbWJxS7u0sjx5Guq0';
 	const MAX_IMAGES = 10;
 
 	let mode = RANDOM_IMAGES;
@@ -211,10 +211,10 @@ input[type='number']{
 	width: 80px;
 } 
 
-.center-button {
+/* .center-button {
 	margin:0 auto;
     display:block;
-}
+} */
 
 h1 { 
 	font-family: "Roboto Slab", serif;
@@ -282,7 +282,6 @@ main {
 
 {#if isLoading } 
 	<LoadingSpinner />
-	<!-- <h1 class="center-text">Loading... Please wait!</h1> -->
 {:else}
 
 <section transition:fade>
