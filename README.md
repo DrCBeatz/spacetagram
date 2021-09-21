@@ -4,7 +4,7 @@ https://www.spacetagram.io
 <p>Instagram-style single page web app that searches and displays images from NASA's Astronomy Picture of the Day API. Made with Svelte JS (ES6 Javascript) and Django (Python).</p>
 
 
-<img src="https://www.spacetagram.io/static/img/spacetagram_iphone.png" alt="Spacetagram on iPhone screenshot" height="500"/>
+<img src="https://www.spacetagram.io/static/img/spacetagram_iphone2.png" alt="Spacetagram on iPhone screenshot" height="500"/>
 
 Features include:
 - Likeable/unlikeable images with animated heart icon which persist after closing/reloading window (via local storage)
