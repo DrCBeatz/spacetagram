@@ -6,8 +6,6 @@
     left: 0;
     height: 4rem;
     background: #485063;
-    /* background: #858b97; */
-    /* background: #717786; */
     opacity: 0.89;
     display: flex;
     align-items: center;
@@ -18,6 +16,7 @@
   h1 {
     color: white;
     font-family: "Roboto Slab", serif;
+    /* font-family: sans-serif; */
     margin: 0;
     text-align: left;
   }

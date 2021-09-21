@@ -43,10 +43,6 @@
   }
 </style>
 
-<!-- <div class="loading">
-  <p>Loading...</p>
-</div> -->
-
 <div class="loading">
   <div class="lds-ring">
     <div />

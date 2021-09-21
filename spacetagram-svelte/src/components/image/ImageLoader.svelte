@@ -2,19 +2,10 @@
   export let src
   export let alt
   
-  import { onMount } from 'svelte'
   import IntersectionObserver from './IntersectionObserver.svelte'
   import Image from './Image.svelte'
 
-  let nativeLoading = false;
-
-  // Determine whether to bypass our intersecting check
-  // onMount(() => {
-  //   if ('loading' in HTMLImageElement.prototype) {
-  //     nativeLoading = true
-  //   }
-  // })
-  
+  let nativeLoading = false;  
 </script>
 
 <IntersectionObserver once={true} let:intersecting={intersecting}>

@@ -156,7 +156,6 @@ CSP_STYLE_SRC = (
     "'self'",
     "fonts.googleapis.com",
     # "'unsafe-inline'",
-    # "'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='"
     )
 
 CSP_SCRIPT_SRC = ("'self'",

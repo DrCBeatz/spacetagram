@@ -1,0 +1,3 @@
+/* this is a blank css stylesheet used by Svelte's to allow built-in transitions
+under a strict Content Security Policy without using inline styles, namely
+the 'style-src: unsafe-inline' directive. */

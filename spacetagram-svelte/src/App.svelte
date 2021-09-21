@@ -105,7 +105,7 @@
 		likedImages = likedImages.filter( obj => {
     		return obj.date !== image.date;
 		});
-		store.update((prev) => [...likedImages])
+		store.update(() => [...likedImages])
 	}
 
 	function toggleLikedImageHandler(image) {
@@ -180,44 +180,12 @@
 }
 
 
-/* .column {
-	float: left;
-	width: 50%;
-	padding: 0 10px;
-}
-
-.row:after {
-	content: "";
-	display: table;
-	clear: both;
-}
-
-.row {margin: 0 -5px;}
-
-@media screen and (max-width: 600px) {
-	.column {
-		width: 100%;
-		display: block;
-		margin-bottom: 20px;
-	}
-}
-
-.responsive {
-	max-width: 100%;
-	height: auto;
-} */
-
 input[type='number']{
 	width: 80px;
 } 
 
-/* .center-button {
-	margin:0 auto;
-    display:block;
-} */
-
 h1 { 
-	font-family: "Roboto Slab", serif;
+	font-family: sans-serif;
 	color:white;	
 }
 
@@ -286,12 +254,12 @@ main {
 
 <section transition:fade>
 			{#if imageList.length > 0 }
-		<h1 class="center-text">NASA's Astronomy Picture of the Day</h1>
+		<h1 class="center-text"><strong>NASA's Astronomy Picture of the Day</strong></h1>
 	{:else}
 	<h1 class="center-text">No images found, try again with a different start and end date.</h1>	
 	{/if}
 		<h5 class="center-text" style="color:white">(choose search options below and click 'Load Images' above for more images)</h5>
-		<h3 class="center-text" style="color:white">Toggle Search Mode:</h3>
+		<h3 class="center-text" style="color:white">Toggle Search Options:</h3>
 		<Button mode="center-button" on:click={toggleModeHandler}>{mode}</Button>
 		<br>
 		</section>
@@ -315,7 +283,6 @@ main {
 		</div>
 		{/if}
 	</main>
-		
 		
 	{#each imageList as image}
 	<Card>
@@ -342,9 +309,7 @@ main {
 		<Button mode="outline success" on:click={SendLinkByMail(image)}>Email URL</Button>
 		{/if}
 		<p>{image.explanation}</p>
-		<p>
-			<!-- <Button mode={(likedImages.filter(e => e.date === image.date).length > 0 ) ? "button outline" : "outline success"} on:click={toggleLikedImageHandler(image)}  -->
-				<!-- id={image.date} -->
+		<p>			
 			<Button mode="outline success" on:click={toggleLikedImageHandler(image)} 	
 				 
 				>{(likedImages.filter(e => e.date === image.date).length > 0 ) ? 'Unlike' : ' Like '}</Button>
