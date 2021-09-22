@@ -13,7 +13,7 @@ Features include:
 - Play embedded videos from Youtube/Vimeo in window or fullscreen mode
 - A+ security rating from https://observatory.mozilla.org
 
-<img src="https://www.spacetagram.io/static/img/spacetagram_observatory_score.png" alt="Mozilla Observatory Score screenshot" height = "400"/>
+<img src="https://www.spacetagram.io/static/img/spacetagram_iphone3.jpg" alt="Mozilla Observatory Score screenshot" height = "500"/>
 
 <p>Fewer than 1% websites test get an A+ rating, for more info see:
 <br>https://blog.mozilla.org/security/2018/02/28/analysis-alexa-top-1m-sites-2/</p>
